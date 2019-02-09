@@ -1,6 +1,7 @@
 
 import java.awt.*;
 import java.lang.String;
+import java.math.*;
 
 public class Items {
 //   creating item object and constructor -  to create particular items
@@ -45,6 +46,11 @@ public class Items {
     }
 
 //    double totalTax = this.getSalesTax()+ this.getImportTax();
-
+    public BigDecimal roundTax(double input){
+        BigDecimal bInput = new BigDecimal(input);
+        MathContext M = new MathContext(4); //4 precision
+        BigDecimal output = bInput.round(M);
+        return output;
+    }
 
 }
