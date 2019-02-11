@@ -26,31 +26,32 @@ public class Items {
 
    public double getSalesTax(){
         if (salesTaxExempt){
-             double salesTax  = 0.00;
-            return salesTax;
+            return 0.00;
         } else {
-            double salesTax = 0.1;
-            return salesTax;
+            double salesTax = 0.1*this.itemCost;
+            double salesTaxRounded=Math.round(salesTax*100.0)/100.0;
+            return salesTaxRounded;
         }
     }
 
 
     public double getImportTax() {
         if (imported){
-            double importTax = 0.05;
-            return importTax;
+            double importTax = 0.05*this.itemCost;;
+            double importTaxRounded = Math.round(importTax*100.0)/100.0;
+            return importTaxRounded;
         } else {
-            double importTax = 0.0;
-            return importTax;
+            return 0.00;
         }
     }
 
-//    double totalTax = this.getSalesTax()+ this.getImportTax();
-    public BigDecimal roundTax(double input){
-        BigDecimal bInput = new BigDecimal(input);
-        MathContext M = new MathContext(4); //4 precision
-        BigDecimal output = bInput.round(M);
-        return output;
+    public double getTotalTax(){
+        double getTotal = getSalesTax()+getImportTax();
+        double getTotal_1 = Math.round(getTotal * 20);
+        double getTotalRounded= getTotal_1/20;
+
+       return getTotalRounded;
     }
+
 
 }

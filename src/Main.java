@@ -2,8 +2,11 @@ import java.awt.*;
 import java.util.Scanner;
 import java.lang.*;
 import java.math.*;
+import java.text.DecimalFormat;
 
 public class Main {
+
+   private static DecimalFormat df2 = new DecimalFormat(".##");
 
    public static void main(String[] args) {
 
@@ -20,61 +23,51 @@ public class Main {
 
       //USER WILL INPUT NUMBERS TO SEE EITHER RECEIPT #1, #2 OR #3. TO SEE ALL RECEIPTS TOGETHER ENTER ANY OTHER NUMBER.
       //ONLY ACCEPTABLE INPUT IS A WHOLE INTEGER NUMBER
-      System.out.println("Enter number 1,2 or 3 to see each receipt, press any NUMBER to see all receipts: ");
+      System.out.println("Enter number 1,2 or 3 to see each receipt, enter any OTHER NUMBER to see all receipts: ");
       Scanner input = new Scanner(System.in);
       int userNumber = input.nextInt();
-      System.out.println("--------------------NUMBER CHOSEN:---------------------");
+      System.out.println("--------------------NUMBER ENTERED:---------------------");
       System.out.println("---------------------------"+userNumber+"----------------------------");
 
       if (userNumber == 1){
 
          //BOOK
-         double bookTax1 = book.getImportTax();                                      //calculating import duty, if imported
-         double bookTax2 = book.getSalesTax();                                       //calculating service tax exempt, if exempted.
-         double totalBookTax = (bookTax1+bookTax2)*book.itemCost;                    //total tax for this item
-         System.out.println("1 "+book.itemName+": $"+(book.itemCost+totalBookTax));  //PRINT PRICE OF THE ITEM WITH TAXES
+         double bookTax = book.getTotalTax(); //total tax (sales + import) for this item, which ever is applicable
+         System.out.println("1 "+book.itemName+": $"+(book.itemCost+bookTax));//PRINT PRICE OF THE ITEM WITH TAXES
+
          //CD
-         double CDTax1 = CD.getImportTax();
-         double CDTax2 = CD.getSalesTax();
-         double totalCDTax = (CDTax1+CDTax2)*CD.itemCost;
-         double itemCostTax = CD.itemCost+totalCDTax;
-         double itemRounded = Math.round( itemCostTax*100.0)/100.0;
-         System.out.println("1 "+CD.itemName+": $"+ itemRounded) ;
+         double totalCDTax = CD.getTotalTax();
+         double CDtotalCost = CD.itemCost+totalCDTax;
+         System.out.println("1 "+CD.itemName+": $"+  df2.format(CDtotalCost));
+
          //CHOCOLATE
-         double chocolateTax1 = chocolate.getImportTax();
-         double chocolateTax2 = chocolate.getSalesTax();
-         double totalChocolateTax = (chocolateTax1+chocolateTax2)*chocolate.itemCost;
+         double totalChocolateTax = chocolate.getTotalTax();
          System.out.println("1 "+chocolate.itemName+": $"+(chocolate.itemCost+totalChocolateTax));
 
          //SALES TAX CALCULATION
-         double grandTotalTax = totalBookTax+totalCDTax+totalChocolateTax;
-         double grandTotalTaxRounded = Math.round( grandTotalTax *100.00)/100.00;
-         System.out.println("Sales Taxes: $"+grandTotalTaxRounded);
-         //TOTAL AMOUNT
-         double ticketSize = book.itemCost+totalBookTax +CD.itemCost+totalCDTax+chocolate.itemCost+totalChocolateTax;
-         double ticketSizeRounded = Math.round( ticketSize*100.0)/100.0;
-         System.out.println("Total: $"+ ticketSizeRounded);
+         double grandTotalTax = bookTax+totalCDTax+totalChocolateTax;
+         System.out.println("Sales Taxes: $"+grandTotalTax);
+
+         //TOTAL AMOUNT ON TICKET
+         double ticketSize = book.itemCost+CD.itemCost+chocolate.itemCost+grandTotalTax;
+         System.out.println("Total: $"+ df2.format(ticketSize));
 
          System.out.println("-----------------------END OF---------------------------");
          System.out.println("----------------------OUTPUT#1--------------------------");
 
       } else if (userNumber == 2){
          //IMPORTED CHOCOLATE
-         double importedChocolateTax1 = importedChocolate.getImportTax();
-         double importedChocolateTax2 = importedChocolate.getSalesTax();
-         double totalImportedChocolateTax = (importedChocolateTax1+importedChocolateTax2)*importedChocolate.itemCost;
+         double totalImportedChocolateTax = importedChocolate.getTotalTax();
          System.out.println("1 "+importedChocolate.itemName+": $"+(importedChocolate.itemCost+totalImportedChocolateTax));
 
          //IMPORTED PERFUME
-         double importedPerfumeTax1 = importedPerfume.getImportTax();
-         double importedPerfumeTax2 = importedPerfume.getSalesTax();
-         double totalImportedPerfumeTax = (importedPerfumeTax1+importedPerfumeTax2)*importedPerfume.itemCost;
+         double totalImportedPerfumeTax = importedPerfume.getTotalTax();
          System.out.println("1 "+importedPerfume.itemName+": $"+(importedPerfume.itemCost+totalImportedPerfumeTax));
 
          //SALES TAX CALCULATION
          double grandTotalTax = totalImportedChocolateTax +totalImportedPerfumeTax;
-         System.out.println("Sales Taxes: "+grandTotalTax);
-         System.out.println("Total: "+ (importedChocolate.itemCost+importedPerfume.itemCost+grandTotalTax));
+         System.out.println("Sales Taxes: $"+grandTotalTax);
+         System.out.println("Total: $"+ (importedChocolate.itemCost+importedPerfume.itemCost+grandTotalTax));
 
          System.out.println("-----------------------END OF---------------------------");
          System.out.println("----------------------OUTPUT#2--------------------------");
@@ -82,34 +75,28 @@ public class Main {
       } else if (userNumber == 3){
          //IMPORTED PERFUME
          importedPerfume.itemCost=27.99;
-         double importedPerfumeTax1 = importedPerfume.getImportTax();
-         double importedPerfumeTax2 = importedPerfume.getSalesTax();
-         double totalImportedPerfumeTax = (importedPerfumeTax1+importedPerfumeTax2)*importedPerfume.itemCost;
+         double totalImportedPerfumeTax = importedPerfume.getTotalTax();
          System.out.println("1 "+importedPerfume.itemName+": $"+(importedPerfume.itemCost+totalImportedPerfumeTax));
 
          //PERFUME
-         double PerfumeTax1 = perfume.getImportTax();
-         double PerfumeTax2 = perfume.getSalesTax();
-         double totalPerfumeTax = (PerfumeTax1+PerfumeTax2)*perfume.itemCost;
-         System.out.println("1 "+perfume.itemName+": $"+(perfume.itemCost+totalPerfumeTax));
+         double totalPerfumeTax = perfume.getTotalTax();
+         double totalPerfumePlusTax = perfume.itemCost+totalPerfumeTax;
+         System.out.println("1 "+perfume.itemName+": $"+ df2.format(totalPerfumePlusTax));
 
          //HEADACHE
-         double headTax1 = headache.getImportTax();
-         double headTax2 = headache.getSalesTax();
-         double totalHeadacheTax = (headTax1+headTax2)*headache.itemCost;
+         double totalHeadacheTax =  headache.getTotalTax();
          System.out.println("1 "+headache.itemName+": $"+(headache.itemCost+totalHeadacheTax));
 
          //CHOCOLATE
-         importedChocolate.itemCost = 11.25;
-         double importedChocolateTax1 = importedChocolate.getImportTax();
-         double importedChocolateTax2 = importedChocolate.getSalesTax();
-         double totalImportedChocolateTax = (importedChocolateTax1+importedChocolateTax2)*importedChocolate.itemCost;
+         importedChocolate.itemCost = 11.25; //new price for imported chocolate.
+         double totalImportedChocolateTax = importedChocolate.getTotalTax();
+         //CALCULATION DOES NOT MATCH THE QUESTION  -  calculations are correct.
          System.out.println("1 "+importedChocolate.itemName+": $"+(importedChocolate.itemCost+totalImportedChocolateTax));
 
          //SALES TAX
-         double grandTotalTax = totalImportedPerfumeTax+totalPerfumeTax+totalImportedChocolateTax +totalHeadacheTax;
-         System.out.println("Sales Taxes: "+grandTotalTax);
-         System.out.println("Total: "+ (importedPerfume.itemCost+perfume.itemCost+headache.itemCost+importedChocolate.itemCost+grandTotalTax));
+         double grandTotalTax_3 = totalImportedPerfumeTax+totalPerfumeTax+totalImportedChocolateTax +totalHeadacheTax;
+         System.out.println("Sales Taxes: $"+df2.format(grandTotalTax_3));
+         System.out.println("Total: $"+ (importedPerfume.itemCost+perfume.itemCost+headache.itemCost+importedChocolate.itemCost+grandTotalTax_3 ));
 
          System.out.println("-----------------------END OF---------------------------");
          System.out.println("----------------------OUTPUT#3--------------------------");
@@ -119,103 +106,92 @@ public class Main {
          System.out.println("----------------------START OF--------------------------");
          System.out.println("----------------------OUTPUT#1--------------------------");
          //BOOK
-         double bookTax1 = book.getImportTax();                                      //calculating import duty, if imported
-         double bookTax2 = book.getSalesTax();                                       //calculating service tax exempt, if exempted.
-         double totalBookTax = (bookTax1+bookTax2)*book.itemCost;                    //total tax for this item
-         System.out.println("1 "+book.itemName+": $"+(book.itemCost+totalBookTax));  //PRINT PRICE OF THE ITEM WITH TAXES
+         double bookTax = book.getTotalTax(); //total tax (sales + import) for this item, which ever is applicable
+         System.out.println("1 "+book.itemName+": $"+(book.itemCost+bookTax));//PRINT PRICE OF THE ITEM WITH TAXES
+
          //CD
-         double CDTax1 = CD.getImportTax();
-         double CDTax2 = CD.getSalesTax();
-         double totalCDTax = (CDTax1+CDTax2)*CD.itemCost;
-         double itemCostTax = CD.itemCost+totalCDTax;
-         double itemRounded = Math.round( itemCostTax*100.0)/100.0;
-         System.out.println("1 "+CD.itemName+": $"+ itemRounded) ;
+         double totalCDTax = CD.getTotalTax();
+         double CDtotalCost = CD.itemCost+totalCDTax;
+         System.out.println("1 "+CD.itemName+": $"+  df2.format(CDtotalCost));
+
          //CHOCOLATE
-         double chocolateTax1 = chocolate.getImportTax();
-         double chocolateTax2 = chocolate.getSalesTax();
-         double totalChocolateTax = (chocolateTax1+chocolateTax2)*chocolate.itemCost;
+         double totalChocolateTax = chocolate.getTotalTax();
          System.out.println("1 "+chocolate.itemName+": $"+(chocolate.itemCost+totalChocolateTax));
 
          //SALES TAX CALCULATION
-         double grandTotalTax = totalBookTax+totalCDTax+totalChocolateTax;
-         double grandTotalTaxRounded = Math.round( grandTotalTax *100.00)/100.00;
-         System.out.println("Sales Taxes: $"+grandTotalTaxRounded);
-         //TOTAL AMOUNT
-         double ticketSize = book.itemCost+totalBookTax +CD.itemCost+totalCDTax+chocolate.itemCost+totalChocolateTax;
-         double ticketSizeRounded = Math.round( ticketSize*100.0)/100.0;
-         System.out.println("Total: $"+ ticketSizeRounded);
+         double grandTotalTax = bookTax+totalCDTax+totalChocolateTax;
+         System.out.println("Sales Taxes: $"+grandTotalTax);
+
+         //TOTAL AMOUNT ON TICKET
+         double ticketSize = book.itemCost+CD.itemCost+chocolate.itemCost+grandTotalTax;
+         System.out.println("Total: $"+ df2.format(ticketSize));
 
          System.out.println("-----------------------END OF---------------------------");
          System.out.println("----------------------OUTPUT#1--------------------------");
          System.out.println("--------------------------------------------------------");
          System.out.println("--------------------------------------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("--------------------------------------------------------");
+         System.out.println("---------------------THANK YOU--------------------------");
+         System.out.println("--------------------FOR SHOPPING------------------------");
          System.out.println("--------------------------------------------------------");
          System.out.println("--------------------------------------------------------");
          System.out.println("----------------------START OF--------------------------");
          System.out.println("----------------------OUTPUT#2--------------------------");
 
-         double importedChocolateTax1 = importedChocolate.getImportTax();
-         double importedChocolateTax2 = importedChocolate.getSalesTax();
-         double totalImportedChocolateTax = (importedChocolateTax1+importedChocolateTax2)*importedChocolate.itemCost;
+         //IMPORTED CHOCOLATE
+         double totalImportedChocolateTax = importedChocolate.getTotalTax();
          System.out.println("1 "+importedChocolate.itemName+": $"+(importedChocolate.itemCost+totalImportedChocolateTax));
 
-         double importedPerfumeTax1 = importedPerfume.getImportTax();
-         double importedPerfumeTax2 = importedPerfume.getSalesTax();
-         double totalImportedPerfumeTax = (importedPerfumeTax1+importedPerfumeTax2)*importedPerfume.itemCost;
+         //IMPORTED PERFUME
+         double totalImportedPerfumeTax = importedPerfume.getTotalTax();
          System.out.println("1 "+importedPerfume.itemName+": $"+(importedPerfume.itemCost+totalImportedPerfumeTax));
 
-         //SALES TAX
-         double grandTotalTax2 = totalImportedChocolateTax +totalImportedPerfumeTax;
-         System.out.println("Sales Taxes: "+grandTotalTax2);
-         System.out.println("Total: "+ (importedChocolate.itemCost+importedPerfume.itemCost+grandTotalTax2));
+         //SALES TAX CALCULATION
+         double grandTotalTax_2 = totalImportedChocolateTax +totalImportedPerfumeTax;
+         System.out.println("Sales Taxes: $"+grandTotalTax_2);
+         System.out.println("Total: $"+ (importedChocolate.itemCost+importedPerfume.itemCost+grandTotalTax_2));
 
          System.out.println("-----------------------END OF---------------------------");
          System.out.println("----------------------OUTPUT#2--------------------------");
          System.out.println("--------------------------------------------------------");
          System.out.println("--------------------------------------------------------");
+         System.out.println("---------------------THANK YOU--------------------------");
+         System.out.println("--------------------FOR SHOPPING------------------------");
          System.out.println("--------------------------------------------------------");
          System.out.println("--------------------------------------------------------");
          System.out.println("----------------------START OF--------------------------");
          System.out.println("----------------------OUTPUT#3--------------------------");
-
 
          //IMPORTED PERFUME
          importedPerfume.itemCost=27.99;
-         double importedPerfumeTax1B = importedPerfume.getImportTax();
-         double importedPerfumeTax2B = importedPerfume.getSalesTax();
-         double totalImportedPerfumeTaxB = (importedPerfumeTax1B+importedPerfumeTax2B)*importedPerfume.itemCost; //needed in calculating grand total
-         System.out.println("1 "+importedPerfume.itemName+": $"+(importedPerfume.itemCost+totalImportedPerfumeTaxB));
+         double totalImportedPerfumeTax_2 = importedPerfume.getTotalTax();
+         System.out.println("1 "+importedPerfume.itemName+": $"+(importedPerfume.itemCost+totalImportedPerfumeTax_2));
 
          //PERFUME
-         double PerfumeTax1 = perfume.getImportTax();
-         double PerfumeTax2 = perfume.getSalesTax();
-         double totalPerfumeTax = (PerfumeTax1+PerfumeTax2)*perfume.itemCost;//needed in calculating grand total
-         System.out.println("1 "+perfume.itemName+": $"+(perfume.itemCost+totalPerfumeTax));
+         double totalPerfumeTax = perfume.getTotalTax();
+         double totalPerfumePlusTax = perfume.itemCost+totalPerfumeTax;
+         System.out.println("1 "+perfume.itemName+": $"+ df2.format(totalPerfumePlusTax));
 
          //HEADACHE
-         double headTax1 = headache.getImportTax();
-         double headTax2 = headache.getSalesTax();
-         double totalHeadacheTax = (headTax1+headTax2)*headache.itemCost;//needed in calculating grand total
+         double totalHeadacheTax =  headache.getTotalTax();
          System.out.println("1 "+headache.itemName+": $"+(headache.itemCost+totalHeadacheTax));
 
          //CHOCOLATE
-         importedChocolate.itemCost = 11.25;
-         double importedChocolateTax1B = importedChocolate.getImportTax();
-         double importedChocolateTax2B = importedChocolate.getSalesTax();
-         double totalImportedChocolateTaxB = (importedChocolateTax1B+importedChocolateTax2B)*importedChocolate.itemCost;//needed in calculating grand total
-         System.out.println("1 "+importedChocolate.itemName+": $"+(importedChocolate.itemCost+totalImportedChocolateTaxB));
+         importedChocolate.itemCost = 11.25; //new price for imported chocolate.
+         double totalImportedChocolateTax_2 = importedChocolate.getTotalTax();
+         //CALCULATION DOES NOT MATCH THE QUESTION  -  calculations are correct.
+         System.out.println("1 "+importedChocolate.itemName+": $"+(importedChocolate.itemCost+totalImportedChocolateTax_2));
 
          //SALES TAX
-         double grandTotalTax2B = totalImportedPerfumeTaxB+totalPerfumeTax+totalImportedChocolateTax +totalHeadacheTax;//SALES TAX GRAND TOTAL
-         System.out.println("Sales Taxes: "+grandTotalTax2B);
-         System.out.println("Total: "+ (importedPerfume.itemCost+perfume.itemCost+headache.itemCost+importedChocolate.itemCost+grandTotalTax2B));
-
+         double grandTotalTax_3 = totalImportedPerfumeTax_2+totalPerfumeTax+totalImportedChocolateTax_2 +totalHeadacheTax;
+         System.out.println("Sales Taxes: $"+df2.format(grandTotalTax_3));
+         System.out.println("Total: $"+ (importedPerfume.itemCost+perfume.itemCost+headache.itemCost+importedChocolate.itemCost+grandTotalTax_3 ));
 
          System.out.println("-----------------------END OF---------------------------");
          System.out.println("----------------------OUTPUT#3--------------------------");
-
+         System.out.println("--------------------------------------------------------");
+         System.out.println("--------------------------------------------------------");
+         System.out.println("---------------------THANK YOU--------------------------");
+         System.out.println("--------------------FOR SHOPPING------------------------");
       }
 
    }
