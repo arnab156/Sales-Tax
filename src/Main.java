@@ -106,16 +106,15 @@ public class Main {
          System.out.println("----------------------OUTPUT#1--------------------------");
          //BOOK
          double bookTax = book.getTotalTax(); //total tax (sales + import) for this item, which ever is applicable
-         System.out.println("1 "+book.itemName+": $"+(book.itemCost+bookTax));//PRINT PRICE OF THE ITEM WITH TAXES
+         book.getCostPlusTax(); //PRINT PRICE OF THE ITEM WITH TAXES
 
          //CD
          double totalCDTax = CD.getTotalTax();
-         double CDtotalCost = CD.itemCost+totalCDTax;
-         System.out.println("1 "+CD.itemName+": $"+  df2.format(CDtotalCost));
+         CD.getCostPlusTax();
 
          //CHOCOLATE
          double totalChocolateTax = chocolate.getTotalTax();
-         System.out.println("1 "+chocolate.itemName+": $"+(chocolate.itemCost+totalChocolateTax));
+         chocolate.getCostPlusTax();
 
          //SALES TAX CALCULATION
          double grandTotalTax = bookTax+totalCDTax+totalChocolateTax;
@@ -135,14 +134,13 @@ public class Main {
          System.out.println("--------------------------------------------------------");
          System.out.println("----------------------START OF--------------------------");
          System.out.println("----------------------OUTPUT#2--------------------------");
-
          //IMPORTED CHOCOLATE
          double totalImportedChocolateTax = importedChocolate.getTotalTax();
-         System.out.println("1 "+importedChocolate.itemName+": $"+(importedChocolate.itemCost+totalImportedChocolateTax));
+         importedChocolate.getCostPlusTax();
 
          //IMPORTED PERFUME
          double totalImportedPerfumeTax = importedPerfume.getTotalTax();
-         System.out.println("1 "+importedPerfume.itemName+": $"+(importedPerfume.itemCost+totalImportedPerfumeTax));
+         importedPerfume.getCostPlusTax();
 
          //SALES TAX CALCULATION
          double grandTotalTax_2 = totalImportedChocolateTax +totalImportedPerfumeTax;
@@ -163,22 +161,21 @@ public class Main {
          //IMPORTED PERFUME
          importedPerfume.itemCost=27.99;
          double totalImportedPerfumeTax_2 = importedPerfume.getTotalTax();
-         System.out.println("1 "+importedPerfume.itemName+": $"+(importedPerfume.itemCost+totalImportedPerfumeTax_2));
+         importedPerfume.getCostPlusTax();
 
          //PERFUME
          double totalPerfumeTax = perfume.getTotalTax();
-         double totalPerfumePlusTax = perfume.itemCost+totalPerfumeTax;
-         System.out.println("1 "+perfume.itemName+": $"+ df2.format(totalPerfumePlusTax));
+         perfume.getCostPlusTax();
 
          //HEADACHE
          double totalHeadacheTax =  headache.getTotalTax();
-         System.out.println("1 "+headache.itemName+": $"+(headache.itemCost+totalHeadacheTax));
+         headache.getCostPlusTax();
 
          //CHOCOLATE
          importedChocolate.itemCost = 11.25; //new price for imported chocolate.
          double totalImportedChocolateTax_2 = importedChocolate.getTotalTax();
          //CALCULATION DOES NOT MATCH THE QUESTION  -  calculations are correct.
-         System.out.println("1 "+importedChocolate.itemName+": $"+(importedChocolate.itemCost+totalImportedChocolateTax_2));
+         importedChocolate.getCostPlusTax();
 
          //SALES TAX
          double grandTotalTax_3 = totalImportedPerfumeTax_2+totalPerfumeTax+totalImportedChocolateTax_2 +totalHeadacheTax;
