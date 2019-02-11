@@ -2,6 +2,7 @@
 import java.awt.*;
 import java.lang.String;
 import java.math.*;
+import java.text.DecimalFormat;
 
 public class Items {
 //   creating item object and constructor -  to create particular items
@@ -10,6 +11,7 @@ public class Items {
    boolean salesTaxExempt;
    boolean imported;
 
+   private static DecimalFormat df2 = new DecimalFormat(".##");
 
    public Items (
            String inputItemName,
@@ -51,6 +53,13 @@ public class Items {
         double getTotalRounded= getTotal_1/20;
 
        return getTotalRounded;
+    }
+
+
+    public void getCostPlusTax(){
+        double totalTax = getTotalTax();
+        double CostPlusTax = this.itemCost+totalTax;
+        System.out.println("1 "+this.itemName+": $"+  df2.format(CostPlusTax));
     }
 
 
