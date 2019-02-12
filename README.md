@@ -1,6 +1,5 @@
 #Sales-Tax
 
-==========
 Video Overview: What does the app do?
 ==========
 https://youtu.be/E855G5OBakk
