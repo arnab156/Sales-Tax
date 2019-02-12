@@ -21,8 +21,8 @@ public class Items {
          {
             this.itemName = inputItemName;
             this.itemCost = inputItemCost;
-             this.salesTaxExempt = inputSalesTaxExempt;
-             this.imported = inputImported;
+            this.salesTaxExempt = inputSalesTaxExempt;
+            this.imported = inputImported;
          }
 
 
@@ -30,37 +30,34 @@ public class Items {
         if (salesTaxExempt){
             return 0.00;
         } else {
-            double salesTax = 0.1*this.itemCost;
-            double salesTaxRounded=Math.round(salesTax*100.0)/100.0;
-            return salesTaxRounded;
+            double salesTax = 0.1*itemCost;
+            return Math.round(salesTax*100.0)/100.0;
         }
     }
 
 
     public double getImportTax() {
         if (imported){
-            double importTax = 0.05*this.itemCost;;
-            double importTaxRounded = Math.round(importTax*100.0)/100.0;
-            return importTaxRounded;
+            double importTax = 0.05*itemCost;;
+            return Math.round(importTax*100.0)/100.0;
         } else {
             return 0.00;
         }
     }
 
     public double getTotalTax(){
-        double getTotal = getSalesTax()+getImportTax();
-        double getTotal_1 = Math.round(getTotal * 20);
-        double getTotalRounded= getTotal_1/20;
+        double getTotal = Math.round((getSalesTax()+getImportTax()) * 20);
+        double getTotalRounded= getTotal/20;
 
        return getTotalRounded;
     }
 
 
     public void getCostPlusTax(){
-        double totalTax = getTotalTax();
-        double CostPlusTax = this.itemCost+totalTax;
-        System.out.println("1 "+this.itemName+": $"+  df2.format(CostPlusTax));
+        double CostPlusTax = itemCost+getTotalTax();
+        System.out.println("1 "+itemName+": $" +String.format("%.2f",CostPlusTax));
     }
+
 
 
 }
