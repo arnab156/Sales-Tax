@@ -1,7 +1,3 @@
-
-import java.awt.*;
-import java.lang.String;
-import java.math.*;
 import java.text.DecimalFormat;
 
 public class Items {
@@ -13,7 +9,7 @@ public class Items {
 
    private static DecimalFormat df2 = new DecimalFormat(".##");
 
-   public Items (
+   public Items(
            String inputItemName,
            double inputItemCost,
            boolean inputSalesTaxExempt,

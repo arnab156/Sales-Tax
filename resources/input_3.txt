@@ -1,0 +1,4 @@
+imported bottle of perfume,27.99,false,true,
+bottle of perfume,18.99,false,false,
+packet of headache pills,9.75,true,false,
+box of imported chocolates,11.25,true,true

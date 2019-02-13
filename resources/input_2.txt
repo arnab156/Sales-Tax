@@ -1,0 +1,2 @@
+imported box of chocolates,10.00,true,true,
+imported bottle of perfume,47.50,false,true

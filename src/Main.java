@@ -1,177 +1,219 @@
-import java.awt.*;
-import java.util.Scanner;
-import java.lang.*;
-import java.math.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Scanner;
 
 public class Main {
 
-   private static DecimalFormat df2 = new DecimalFormat(".##");
-
-   public static void main(String[] args) {
-
-      Items book = new Items("book",12.49,true,false);
-      Items chocolate = new Items("chocolate bar", 0.85,true,false);
-      Items CD = new Items("music CD",14.99, false, false);
-      Items importedChocolate = new Items("imported box of chocolates", 10.00,true,true);
-      Items importedPerfume = new Items("imported bottle of perfume", 47.50,false,true);
-      Items perfume = new Items("bottle of perfume", 18.99,false,false);
-      Items headache = new Items("packet of headache pills", 9.75,true,false);
+    private static DecimalFormat df2 = new DecimalFormat(".##");
+    public static void main(String[] args) {
 
 
-      //USER WILL INPUT NUMBERS TO SEE EITHER RECEIPT #1, #2 OR #3. TO SEE ALL RECEIPTS TOGETHER ENTER ANY OTHER NUMBER.
-      //ONLY ACCEPTABLE INPUT IS A WHOLE INTEGER NUMBER
-      System.out.println("Enter number 1,2 or 3 to see each receipt, enter any OTHER NUMBER to see all receipts: ");
-      Scanner input = new Scanner(System.in);
-      int userNumber = input.nextInt();
-      System.out.println("--------------------NUMBER ENTERED:---------------------");
-      System.out.println("---------------------------"+userNumber+"----------------------------");
+        //USER WILL INPUT NUMBERS TO SEE EITHER RECEIPT #1, #2 OR #3.
+        //ONLY ACCEPTABLE INPUT IS A WHOLE INTEGER NUMBER
+        System.out.println("Enter number 1,2 or 3 to see each output/receipt or enter any other number to see all outputs together:");
+        Scanner input = new Scanner(System.in);
+        int userNumber = input.nextInt();
+        System.out.println("---------------------- YOUR INPUT#----------------------");
+        System.out.println("---------------------------"+userNumber+"----------------------------");
 
-      if (userNumber == 1){
 
-         //BOOK
-         book.getCostPlusTax(); //PRINT PRICE OF THE ITEM WITH TAXES
+        String line;
+        String item;
+        double cost;
+        boolean salesTaxExempt;
+        boolean imported;
+        String[] info;
+        double tax = 0;
+        double ticket = 0;
+        BufferedReader br = null;
 
-         //CD
-         CD.getCostPlusTax();
 
-         //CHOCOLATE
-         chocolate.getCostPlusTax();
+        if (userNumber == 1){
 
-         //SALES TAX CALCULATION for all the three Items
-         double grandTotalTax = book.getTotalTax()+CD.getTotalTax()+chocolate.getTotalTax();
-         System.out.println("Sales Taxes: $"+String.format("%.2f",grandTotalTax));
+            try {
+                br = new BufferedReader(new FileReader("resources/input.txt"));
 
-         //TOTAL AMOUNT ON TICKET
-         double ticketSize = book.itemCost+CD.itemCost+chocolate.itemCost+grandTotalTax;
-         System.out.println("Total: $"+ df2.format(ticketSize));
+                while ((line = br.readLine()) != null) {
+                    info  = line.split(",");    //, would be the delimiter
+                    item = info[0];
+                    cost = Double.parseDouble(info[(1)]);
+                    salesTaxExempt = Boolean.parseBoolean(info[(2)]);
+                    imported = Boolean.parseBoolean(info[(3)]);
+                    Items product = new Items(item,cost,salesTaxExempt,imported);
+                    product.getCostPlusTax();
+                    tax = tax + product.getTotalTax();
+                    ticket = ticket+ product.itemCost;
+                }
+                System.out.println("Sales Taxes: $"+String.format("%.2f",tax));
+                System.out.println("Total: $"+ df2.format(ticket+tax));
+                System.out.println("-----------------------END OF---------------------------");
+                System.out.println("----------------------OUTPUT#"+ userNumber+"--------------------------");
 
-         System.out.println("-----------------------END OF---------------------------");
-         System.out.println("----------------------OUTPUT#1--------------------------");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    br.close();
+                } catch (IOException e) {
 
-      } else if (userNumber == 2){
-         //IMPORTED CHOCOLATE
-         importedChocolate.getCostPlusTax();
+                    e.printStackTrace();
+                }
+            }
 
-         //IMPORTED PERFUME
-         importedPerfume.getCostPlusTax();
 
-         //SALES TAX CALCULATION
-         double grandTotalTax = importedChocolate.getTotalTax() +importedPerfume.getTotalTax();
-         System.out.println("Sales Taxes: $"+String.format("%.2f",grandTotalTax));
-         System.out.println("Total: $"+ (importedChocolate.itemCost+importedPerfume.itemCost+grandTotalTax));
+        } //END OF #1
 
-         System.out.println("-----------------------END OF---------------------------");
-         System.out.println("----------------------OUTPUT#2--------------------------");
+        else if (userNumber == 2) {
+//            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new FileReader("resources/input_2.txt"));
 
-      } else if (userNumber == 3){
-         //IMPORTED PERFUME
-         importedPerfume.itemCost=27.99;
-         importedPerfume.getCostPlusTax();
+                while ((line = br.readLine()) != null) {
+                    info  = line.split(",");    //, would be the delimiter
+                    item = info[0];
+                    cost = Double.parseDouble(info[(1)]);
+                    salesTaxExempt = Boolean.parseBoolean(info[(2)]);
+                    imported = Boolean.parseBoolean(info[(3)]);
+                    Items product = new Items(item,cost,salesTaxExempt,imported);
+                    product.getCostPlusTax();
+                    tax = tax + product.getTotalTax();
+                    ticket = ticket+ product.itemCost;
+                }
+                System.out.println("Sales Taxes: $"+String.format("%.2f",tax));
+                System.out.println("Total: $"+ df2.format(ticket+tax));
+                System.out.println("-----------------------END OF---------------------------");
+                System.out.println("----------------------OUTPUT#"+ userNumber+"--------------------------");
 
-         //PERFUME
-         perfume.getCostPlusTax();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    br.close();
+                } catch (IOException e) {
 
-         //HEADACHE
-         headache.getCostPlusTax();
+                    e.printStackTrace();
+                }
+            }
 
-         //CHOCOLATE
-         importedChocolate.itemCost = 11.25; //new price for imported chocolate.
-         //CALCULATION DOES NOT MATCH THE QUESTION  -  calculations are correct.
-         importedChocolate.getCostPlusTax();
+        } //END OF OUTPUT#2
+        else if (userNumber == 3){
 
-         //SALES TAX
-         double grandTotalTax_3 = importedPerfume.getTotalTax()+perfume.getTotalTax()+headache.getTotalTax()+importedChocolate.getTotalTax();
-         System.out.println("Sales Taxes: $"+ df2.format(grandTotalTax_3));
-         System.out.println("Total: $"+ (importedPerfume.itemCost+perfume.itemCost+headache.itemCost+importedChocolate.itemCost+grandTotalTax_3 ));
+            try {
+                br = new BufferedReader(new FileReader("resources/input_3.txt"));
 
-         System.out.println("-----------------------END OF---------------------------");
-         System.out.println("----------------------OUTPUT#3--------------------------");
+                while ((line = br.readLine()) != null) {
+                    info  = line.split(",");    //, would be the delimiter
+                    item = info[0];
+                    cost = Double.parseDouble(info[(1)]);
+                    salesTaxExempt = Boolean.parseBoolean(info[(2)]);
+                    imported = Boolean.parseBoolean(info[(3)]);
+                    Items product = new Items(item,cost,salesTaxExempt,imported);
+                    product.getCostPlusTax();
+                    tax = tax + product.getTotalTax();
+                    ticket = ticket+ product.itemCost;
+                }
+                System.out.println("Sales Taxes: $"+String.format("%.2f",tax));
+                System.out.println("Total: $"+ df2.format(ticket+tax));
+                System.out.println("-----------------------END OF---------------------------");
+                System.out.println("----------------------OUTPUT#"+ userNumber+"--------------------------");
 
-      } else {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    br.close();
+                } catch (IOException e) {
 
-         System.out.println("----------------------START OF--------------------------");
-         System.out.println("----------------------OUTPUT#1--------------------------");
+                    e.printStackTrace();
+                }
+            }
 
-         //BOOK
-         book.getCostPlusTax(); //PRINT PRICE OF THE ITEM WITH TAXES
+        }
+        else {
 
-         //CD
-         CD.getCostPlusTax();
+            try {
+                br = new BufferedReader(new FileReader("resources/input_1.txt"));
+                BufferedReader br2 = new BufferedReader(new FileReader("resources/input_2.txt"));
+                BufferedReader br3 =new BufferedReader(new FileReader("resources/input_3.txt"));
+                double tax2 = 0;
+                double ticket2 = 0;
+                double tax3 = 0;
+                double ticket3 = 0;
 
-         //CHOCOLATE
-         chocolate.getCostPlusTax();
+                System.out.println("-----------------------START OF---------------------------");
+                System.out.println("----------------------OUTPUT#1 ---------------------------");
+                while ((line = br.readLine()) != null) {
+                    info  = line.split(",");    //, would be the delimiter
+                    item = info[0];
+                    cost = Double.parseDouble(info[(1)]);
+                    salesTaxExempt = Boolean.parseBoolean(info[(2)]);
+                    imported = Boolean.parseBoolean(info[(3)]);
+                    Items product = new Items(item,cost,salesTaxExempt,imported);
+                    product.getCostPlusTax();
+                    tax = tax + product.getTotalTax();
+                    ticket = ticket+ product.itemCost;
+                }
 
-         //SALES TAX CALCULATION
-         double grandTotalTax = book.getTotalTax()+CD.getTotalTax()+chocolate.getTotalTax();
-         System.out.println("Sales Taxes: $"+String.format("%.2f",grandTotalTax));
+                System.out.println("Sales Taxes: $"+String.format("%.2f",tax));
+                System.out.println("Total: $"+ df2.format(ticket+tax));
+                System.out.println("-----------------------END OF---------------------------");
+                System.out.println("----------------------OUTPUT#1--------------------------");
 
-         //TOTAL AMOUNT ON TICKET
-         double ticketSize = book.itemCost+CD.itemCost+chocolate.itemCost+grandTotalTax;
-         System.out.println("Total: $"+ df2.format(ticketSize));
 
-         System.out.println("-----------------------END OF---------------------------");
-         System.out.println("----------------------OUTPUT#1--------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("---------------------THANK YOU--------------------------");
-         System.out.println("--------------------FOR SHOPPING------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("----------------------START OF--------------------------");
-         System.out.println("----------------------OUTPUT#2--------------------------");
 
-         //IMPORTED CHOCOLATE
-         importedChocolate.getCostPlusTax();
+                System.out.println("-----------------------START OF---------------------------");
+                System.out.println("----------------------OUTPUT#2 ---------------------------");
+                while ((line = br2.readLine()) != null) {
+                    info  = line.split(",");    //, would be the delimiter
+                    item = info[0];
+                    cost = Double.parseDouble(info[(1)]);
+                    salesTaxExempt = Boolean.parseBoolean(info[(2)]);
+                    imported = Boolean.parseBoolean(info[(3)]);
+                    Items product = new Items(item,cost,salesTaxExempt,imported);
+                    product.getCostPlusTax();
+                    tax2 = tax2 + product.getTotalTax();
+                    ticket2 = ticket2+ product.itemCost;
+                }
+                System.out.println("Sales Taxes: $"+String.format("%.2f",tax2));
+                System.out.println("Total: $"+ df2.format(ticket2+tax2));
+                System.out.println("-----------------------END OF---------------------------");
+                System.out.println("----------------------OUTPUT#2--------------------------");
 
-         //IMPORTED PERFUME
-         importedPerfume.getCostPlusTax();
 
-         //SALES TAX CALCULATION
-         double grandTotalTax_2 = importedChocolate.getTotalTax()+importedPerfume.getTotalTax();
-         System.out.println("Sales Taxes: $"+grandTotalTax_2);
-         System.out.println("Total: $"+ (importedChocolate.itemCost+importedPerfume.itemCost+grandTotalTax_2));
+                System.out.println("-----------------------START OF---------------------------");
+                System.out.println("-----------------------OUTPUT#3---------------------------");
+                while ((line = br3.readLine()) != null) {
+                    info  = line.split(",");    //, would be the delimiter
+                    item = info[0];
+                    cost = Double.parseDouble(info[(1)]);
+                    salesTaxExempt = Boolean.parseBoolean(info[(2)]);
+                    imported = Boolean.parseBoolean(info[(3)]);
+                    Items product = new Items(item,cost,salesTaxExempt,imported);
+                    product.getCostPlusTax();
+                    tax3 = tax3 + product.getTotalTax();
+                    ticket3 = ticket3+ product.itemCost;
+                }
 
-         System.out.println("-----------------------END OF---------------------------");
-         System.out.println("----------------------OUTPUT#2--------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("---------------------THANK YOU--------------------------");
-         System.out.println("--------------------FOR SHOPPING------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("----------------------START OF--------------------------");
-         System.out.println("----------------------OUTPUT#3--------------------------");
+                System.out.println("Sales Taxes: $"+String.format("%.2f",tax3));
+                System.out.println("Total: $"+ df2.format(ticket3+tax3));
+                System.out.println("-----------------------END OF---------------------------");
+                System.out.println("----------------------OUTPUT#3--------------------------");
 
-         //IMPORTED PERFUME
-         importedPerfume.itemCost=27.99;
-         importedPerfume.getCostPlusTax();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    br.close();
+                } catch (IOException e) {
 
-         //PERFUME
-         perfume.getCostPlusTax();
+                    e.printStackTrace();
+                }
+            }
+        }
 
-         //HEADACHE
-         headache.getCostPlusTax();
 
-         //CHOCOLATE
-         importedChocolate.itemCost = 11.25; //new price for imported chocolate.
-         //CALCULATION DOES NOT MATCH THE QUESTION  -  calculations are correct.
-         importedChocolate.getCostPlusTax();
-
-         //SALES TAX
-         double grandTotalTax_3 = importedPerfume.getTotalTax()+perfume.getTotalTax()+headache.getTotalTax()+importedChocolate.getTotalTax();
-         System.out.println("Sales Taxes: $"+df2.format(grandTotalTax_3));
-         System.out.println("Total: $"+ (importedPerfume.itemCost+perfume.itemCost+headache.itemCost+importedChocolate.itemCost+grandTotalTax_3 ));
-
-         System.out.println("-----------------------END OF---------------------------");
-         System.out.println("----------------------OUTPUT#3--------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("--------------------------------------------------------");
-         System.out.println("---------------------THANK YOU--------------------------");
-         System.out.println("--------------------FOR SHOPPING------------------------");
-      }
-
-   }
-
+    }
 
 }
